@@ -20,41 +20,25 @@ class _PocOneState extends State<PocOne> {
   @override
   void initState() {
     _chartData = getChartData();
-    _zoomModeType = ZoomMode.xy;
+    _zoomModeType = ZoomMode.x;
     _tooltipBehavior = TooltipBehavior(enable: true);
-    datas = [
-      CharData(day: 30, price: 0),
-      CharData(day: 15, price: 15),
-      CharData(day: 40, price: 40),
-      CharData(day: 10, price: 10),
-      CharData(day: 55, price: 10),
-      CharData(day: 80, price: 80),
-    ];
 
     super.initState();
   }
 
   List<SalesData> getChartData() {
     final List<SalesData> chartData = [
-      SalesData(2017, 5),
-      SalesData(2018, 12),
-      SalesData(2019, 24),
-      SalesData(2020, 10),
-      SalesData(2021, 20)
+      SalesData(DateTime(2016, 12, 31), 25),
+      SalesData(DateTime(2017, 12, 31), 12),
+      SalesData(DateTime(2018, 12, 31), 24),
+      SalesData(DateTime(2019, 12, 31), 18),
+      SalesData(DateTime(2020, 12, 31), 30)
     ];
     return chartData;
   }
 
   @override
   Widget build(BuildContext context) {
-    List<_SalesData> data = [
-      _SalesData('Jan', 35),
-      _SalesData('Feb', 28),
-      _SalesData('Mar', 34),
-      _SalesData('Apr', 32),
-      _SalesData('May', 40)
-    ];
-
     return Scaffold(
         appBar: AppBar(
           title: Text(''),
@@ -308,7 +292,7 @@ class _PocOneState extends State<PocOne> {
                 legend: Legend(isVisible: false),
                 tooltipBehavior: _tooltipBehavior,
                 series: <SplineAreaSeries>[
-                  SplineAreaSeries<SalesData, double>(
+                  SplineAreaSeries<SalesData, DateTime>(
                       name: 'Sales',
                       dataSource: _chartData,
                       xValueMapper: (SalesData sales, _) => sales.year,
@@ -325,21 +309,41 @@ class _PocOneState extends State<PocOne> {
                       splineType: SplineType.natural,
                       cardinalSplineTension: 0.2)
                 ],
+                primaryXAxis: DateTimeAxis(),
+
+                // primaryXAxis: DateTimeAxis(
+                //     edgeLabelPlacement: EdgeLabelPlacement.shift,
+                //     dateFormat: DateFormat.y(),
+                //     intervalType: DateTimeIntervalType.years,
+                //     interactiveTooltip:
+                //         const InteractiveTooltip(enable: false)),
+                // primaryYAxis: NumericAxis(
+                //     labelFormat: '{value}M',
+                //     numberFormat: NumberFormat.simpleCurrency(decimalDigits: 0),
+                //     interactiveTooltip:
+                //         const InteractiveTooltip(enable: false)),
                 zoomPanBehavior: ZoomPanBehavior(
+                    enableDoubleTapZooming: true,
+                    enableSelectionZooming: true,
+                    maximumZoomLevel: 0.7,
 
                     /// To enable the pinch zooming as true.
                     enablePinching: true,
                     zoomMode: _zoomModeType,
                     enablePanning: true,
-                    enableMouseWheelZooming: false)),
+                    enableMouseWheelZooming: true)),
           ],
         ));
   }
 }
 
 class SalesData {
-  SalesData(this.year, this.sales);
-  final double year;
+  SalesData(
+    this.year,
+    this.sales,
+  );
+  final DateTime year;
+
   final double sales;
 }
 
@@ -350,13 +354,6 @@ class CharData {
     required this.day,
     required this.price,
   });
-}
-
-class _SalesData {
-  _SalesData(this.year, this.sales);
-
-  final String year;
-  final double sales;
 }
 
 Widget get barraDeRisco => Padding(
