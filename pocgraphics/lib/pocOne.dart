@@ -419,7 +419,11 @@ class _PocOneState extends State<PocOne> {
                     opacity: 1,
                     splineType: SplineType.natural,
                     cardinalSplineTension: 0.7)
-              ])
+              ]),
+          SfCartesianChart(
+            primaryYAxis:
+                DateTimeAxis(autoScrollingDeltaType: DateTimeIntervalType.days),
+          ),
         ]));
   }
 }
